@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.system.mapper.TestResultMapper">
+    
+    <resultMap type="TestResult" id="TestResultResult">
+        <result property="id"    column="id"    />
+        <result property="testId"    column="test_id"    />
+        <result property="answers"    column="answers"    />
+        <result property="content"    column="content"    />
+        <result property="title"    column="title"    />
+    </resultMap>
+
+    <sql id="selectTestResultVo">
+        select id,test_id, answers, content, title from test_result
+    </sql>
+
+    <select id="selectTestResultList" parameterType="TestResult" resultMap="TestResultResult">
+        <include refid="selectTestResultVo"/>
+        <where>
+            <if test="testId != null "> and test_id = #{testId}</if>
+        </where>
+    </select>
+    
+    <select id="selectTestResultById" parameterType="Integer" resultMap="TestResultResult">
+        <include refid="selectTestResultVo"/>
+        where id = #{id}
+    </select>
+        
+    <insert id="insertTestResult" parameterType="TestResult" useGeneratedKeys="true" keyProperty="id">
+        insert into test_result
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="testId != null">test_id,</if>
+            <if test="answers != null">answers,</if>
+            <if test="content != null">content,</if>
+            <if test="title != null">title,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="testId != null">#{testId},</if>
+            <if test="answers != null">#{answers},</if>
+            <if test="content != null">#{content},</if>
+            <if test="title != null">#{title},</if>
+         </trim>
+    </insert>
+
+    <update id="updateTestResult" parameterType="TestResult">
+        update test_result
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="answers != null">answers = #{answers},</if>
+            <if test="content != null">content = #{content},</if>
+            <if test="title != null">title = #{title},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteTestResultById" parameterType="Integer">
+        delete from test_result where id = #{id}
+    </delete>
+
+    <delete id="deleteTestResultByIds" parameterType="String">
+        delete from test_result where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+</mapper>

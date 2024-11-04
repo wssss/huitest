@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.img.mapper.ImgOrderMapper">
+    
+    <resultMap type="ImgOrder" id="ImgOrderResult">
+        <result property="id"    column="id"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="payMoney"    column="pay_money"    />
+        <result property="cardId"    column="card_id"    />
+        <result property="orderNum"    column="order_num"    />
+        <result property="vaildDays"    column="vaild_days"    />
+    </resultMap>
+
+    <sql id="selectImgOrderVo">
+        select id, create_time, pay_money, card_id, order_num, vaild_days from img_order
+    </sql>
+
+    <select id="selectImgOrderList" parameterType="ImgOrder" resultMap="ImgOrderResult">
+        <include refid="selectImgOrderVo"/>
+        <where>  
+            <if test="payMoney != null "> and pay_money = #{payMoney}</if>
+            <if test="cardId != null "> and card_id = #{cardId}</if>
+            <if test="orderNum != null "> and order_num = #{orderNum}</if>
+            <if test="vaildDays != null "> and vaild_days = #{vaildDays}</if>
+        </where>
+    </select>
+    
+    <select id="selectImgOrderById" parameterType="Long" resultMap="ImgOrderResult">
+        <include refid="selectImgOrderVo"/>
+        where id = #{id}
+    </select>
+        
+    <insert id="insertImgOrder" parameterType="ImgOrder" useGeneratedKeys="true" keyProperty="id">
+        insert into img_order
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="createTime != null">create_time,</if>
+            <if test="payMoney != null">pay_money,</if>
+            <if test="cardId != null">card_id,</if>
+            <if test="orderNum != null">order_num,</if>
+            <if test="vaildDays != null">vaild_days,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="createTime != null">#{createTime},</if>
+            <if test="payMoney != null">#{payMoney},</if>
+            <if test="cardId != null">#{cardId},</if>
+            <if test="orderNum != null">#{orderNum},</if>
+            <if test="vaildDays != null">#{vaildDays},</if>
+         </trim>
+    </insert>
+
+    <update id="updateImgOrder" parameterType="ImgOrder">
+        update img_order
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="createTime != null">create_time = #{createTime},</if>
+            <if test="payMoney != null">pay_money = #{payMoney},</if>
+            <if test="cardId != null">card_id = #{cardId},</if>
+            <if test="orderNum != null">order_num = #{orderNum},</if>
+            <if test="vaildDays != null">vaild_days = #{vaildDays},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteImgOrderById" parameterType="Long">
+        delete from img_order where id = #{id}
+    </delete>
+
+    <delete id="deleteImgOrderByIds" parameterType="String">
+        delete from img_order where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+</mapper>

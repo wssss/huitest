@@ -1,0 +1,122 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.system.mapper.TestQuestionMapper">
+    
+    <resultMap type="TestQuestion" id="TestQuestionResult">
+        <result property="id"    column="id"    />
+        <result property="testId"    column="test_id"    />
+        <result property="questionType"    column="question_type"    />
+        <result property="questionTitle"    column="question_title"    />
+        <result property="choiceA"    column="choice_a"    />
+        <result property="choiceB"    column="choice_b"    />
+        <result property="choiceC"    column="choice_c"    />
+        <result property="choiceD"    column="choice_d"    />
+        <result property="choiceAUrl"    column="choice_a_url"    />
+        <result property="choiceBUrl"    column="choice_b_url"    />
+        <result property="choiceCUrl"    column="choice_c_url"    />
+        <result property="choiceDUrl"    column="choice_d_url"    />
+        <result property="answer"    column="answer"    />
+        <result property="nextUrl"    column="nextUrl"    />
+        <result property="preUrl"    column="preUrl"    />
+    </resultMap>
+
+    <sql id="selectTestQuestionVo">
+        select id, test_id, question_type, question_title, choice_a, choice_b, choice_c, choice_d, choice_a_url, choice_b_url, choice_c_url, choice_d_url, answer, nextUrl, preUrl from test_question
+    </sql>
+
+    <select id="selectTestQuestionList" parameterType="TestQuestion" resultMap="TestQuestionResult">
+        <include refid="selectTestQuestionVo"/>
+        <where>  
+            <if test="questionType != null "> and question_type = #{questionType}</if>
+            <if test="questionTitle != null  and questionTitle != ''"> and question_title = #{questionTitle}</if>
+            <if test="answer != null  and answer != ''"> and answer = #{answer}</if>
+        </where>
+    </select>
+    <select id="questionsByIds" parameterType="String" resultMap="TestQuestionResult">
+        <include refid="selectTestQuestionVo"/>
+        where id in
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </select>
+
+    <select id="selectTestQuestionListByTestId" parameterType="Long" resultMap="TestQuestionResult">
+        <include refid="selectTestQuestionVo"/>
+        where test_id = #id
+    </select>
+
+    <select id="selectTestQuestionById" parameterType="Long" resultMap="TestQuestionResult">
+        <include refid="selectTestQuestionVo"/>
+        where id = #{id}
+    </select>
+        
+    <insert id="insertTestQuestion" parameterType="TestQuestion" useGeneratedKeys="true" keyProperty="id">
+        insert into test_question
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="testId != null">test_id,</if>
+            <if test="questionType != null">question_type,</if>
+            <if test="questionTitle != null">question_title,</if>
+            <if test="choiceA != null">choice_a,</if>
+            <if test="choiceB != null">choice_b,</if>
+            <if test="choiceC != null">choice_c,</if>
+            <if test="choiceD != null">choice_d,</if>
+            <if test="choiceAUrl != null">choice_a_url,</if>
+            <if test="choiceBUrl != null">choice_b_url,</if>
+            <if test="choiceCUrl != null">choice_c_url,</if>
+            <if test="choiceDUrl != null">choice_d_url,</if>
+            <if test="answer != null">answer,</if>
+            <if test="nextUrl != null">nextUrl,</if>
+            <if test="preUrl != null">preUrl,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="testId != null">#{testId},</if>
+            <if test="questionType != null">#{questionType},</if>
+            <if test="questionTitle != null">#{questionTitle},</if>
+            <if test="choiceA != null">#{choiceA},</if>
+            <if test="choiceB != null">#{choiceB},</if>
+            <if test="choiceC != null">#{choiceC},</if>
+            <if test="choiceD != null">#{choiceD},</if>
+            <if test="choiceAUrl != null">#{choiceAUrl},</if>
+            <if test="choiceBUrl != null">#{choiceBUrl},</if>
+            <if test="choiceCUrl != null">#{choiceCUrl},</if>
+            <if test="choiceDUrl != null">#{choiceDUrl},</if>
+            <if test="answer != null">#{answer},</if>
+            <if test="nextUrl != null">#{nextUrl},</if>
+            <if test="preUrl != null">#{preUrl},</if>
+         </trim>
+    </insert>
+
+    <update id="updateTestQuestion" parameterType="TestQuestion">
+        update test_question
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="testId != null">test_id = #{testId},</if>
+            <if test="questionType != null">question_type = #{questionType},</if>
+            <if test="questionTitle != null">question_title = #{questionTitle},</if>
+            <if test="choiceA != null">choice_a = #{choiceA},</if>
+            <if test="choiceB != null">choice_b = #{choiceB},</if>
+            <if test="choiceC != null">choice_c = #{choiceC},</if>
+            <if test="choiceD != null">choice_d = #{choiceD},</if>
+            <if test="choiceAUrl != null">choice_a_url = #{choiceAUrl},</if>
+            <if test="choiceBUrl != null">choice_b_url = #{choiceBUrl},</if>
+            <if test="choiceCUrl != null">choice_c_url = #{choiceCUrl},</if>
+            <if test="choiceDUrl != null">choice_d_url = #{choiceDUrl},</if>
+            <if test="answer != null">answer = #{answer},</if>
+            <if test="nextUrl != null">nextUrl = #{nextUrl},</if>
+            <if test="preUrl != null">preUrl = #{preUrl},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteTestQuestionById" parameterType="Long">
+        delete from test_question where id = #{id}
+    </delete>
+
+    <delete id="deleteTestQuestionByIds" parameterType="String">
+        delete from test_question where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+</mapper>

@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.img.mapper.ImgCardMapper">
+    
+    <resultMap type="ImgCard" id="ImgCardResult">
+        <result property="id"    column="id"    />
+        <result property="price"    column="price"    />
+        <result property="remark"    column="remark"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="name"    column="name"    />
+        <result property="validDay"    column="valid_day"    />
+        <result property="status"    column="status"    />
+    </resultMap>
+
+    <sql id="selectImgCardVo">
+        select id, price, remark, create_time, name, valid_day, status from img_card
+    </sql>
+
+    <select id="selectImgCardList" parameterType="ImgCard" resultMap="ImgCardResult">
+        <include refid="selectImgCardVo"/>
+        <where>  
+            <if test="price != null "> and price = #{price}</if>
+            <if test="name != null  and name != ''"> and name like concat('%', #{name}, '%')</if>
+            <if test="validDay != null "> and valid_day = #{validDay}</if>
+            <if test="status != null "> and status = #{status}</if>
+        </where>
+    </select>
+    
+    <select id="selectImgCardById" parameterType="Long" resultMap="ImgCardResult">
+        <include refid="selectImgCardVo"/>
+        where id = #{id}
+    </select>
+        
+    <insert id="insertImgCard" parameterType="ImgCard">
+        insert into img_card
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null">id,</if>
+            <if test="price != null">price,</if>
+            <if test="remark != null">remark,</if>
+            <if test="createTime != null">create_time,</if>
+            <if test="name != null">name,</if>
+            <if test="validDay != null">valid_day,</if>
+            <if test="status != null">status,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="id != null">#{id},</if>
+            <if test="price != null">#{price},</if>
+            <if test="remark != null">#{remark},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="name != null">#{name},</if>
+            <if test="validDay != null">#{validDay},</if>
+            <if test="status != null">#{status},</if>
+         </trim>
+    </insert>
+
+    <update id="updateImgCard" parameterType="ImgCard">
+        update img_card
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="price != null">price = #{price},</if>
+            <if test="remark != null">remark = #{remark},</if>
+            <if test="createTime != null">create_time = #{createTime},</if>
+            <if test="name != null">name = #{name},</if>
+            <if test="validDay != null">valid_day = #{validDay},</if>
+            <if test="status != null">status = #{status},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteImgCardById" parameterType="Long">
+        delete from img_card where id = #{id}
+    </delete>
+
+    <delete id="deleteImgCardByIds" parameterType="String">
+        delete from img_card where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+</mapper>

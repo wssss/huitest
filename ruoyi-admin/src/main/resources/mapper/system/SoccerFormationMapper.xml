@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.system.mapper.SoccerFormationMapper">
+    
+    <resultMap type="SoccerFormation" id="SoccerFormationResult">
+        <result property="id"    column="id"    />
+        <result property="teamName"    column="team_name"    />
+        <result property="formation"    column="formation"    />
+        <result property="isDel"    column="is_del"    />
+        <result property="playerIdStr"    column="player_id_str"    />
+    </resultMap>
+
+    <sql id="selectSoccerFormationVo">
+        select id, team_name, formation, is_del, player_id_str from soccer_formation
+    </sql>
+
+    <select id="selectSoccerFormationList" parameterType="SoccerFormation" resultMap="SoccerFormationResult">
+        <include refid="selectSoccerFormationVo"/>
+        <where>  
+            <if test="teamName != null  and teamName != ''"> and team_name like concat('%', #{teamName}, '%')</if>
+            <if test="formation != null  and formation != ''"> and formation = #{formation}</if>
+            <if test="isDel != null  and isDel != ''"> and is_del = #{isDel}</if>
+            <if test="playerIdStr != null  and playerIdStr != ''"> and player_id_str = #{playerIdStr}</if>
+        </where>
+    </select>
+    <resultMap id="FcResult" type="SoccerFormation" >
+        <result property="id"    column="id"    />
+        <result property="teamName"    column="team_name"    />
+        <result property="formation"    column="formation"    />
+        <result property="isDel"    column="is_del"    />
+        <result property="playerIdStr"    column="player_id_str"    />
+
+        <collection property="playerList" ofType="TestPlayer">
+            <id property="id"    column="player_id"    />
+            <result property="name"    column="name"    />
+            <result property="num"    column="num"    />
+            <result property="url"    column="url"    />
+        </collection>
+    </resultMap>
+    <select id="selectFcList" parameterType="SoccerFormation" resultMap="FcResult">
+        select sf.*,tp.id as player_id,name,num,url
+        from soccer_formation sf
+        left join test_player tp
+        on FIND_IN_SET(tp.id, sf.player_id_str) > 0
+        order by FIND_IN_SET(tp.id, sf.player_id_str)
+    </select>
+
+
+    <select id="selectSoccerFormationById" parameterType="Long" resultMap="SoccerFormationResult">
+        <include refid="selectSoccerFormationVo"/>
+        where id = #{id}
+    </select>
+        
+    <insert id="insertSoccerFormation" parameterType="SoccerFormation" useGeneratedKeys="true" keyProperty="id">
+        insert into soccer_formation
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="teamName != null">team_name,</if>
+            <if test="formation != null">formation,</if>
+            <if test="isDel != null">is_del,</if>
+            <if test="playerIdStr != null">player_id_str,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="teamName != null">#{teamName},</if>
+            <if test="formation != null">#{formation},</if>
+            <if test="isDel != null">#{isDel},</if>
+            <if test="playerIdStr != null">#{playerIdStr},</if>
+         </trim>
+    </insert>
+
+    <update id="updateSoccerFormation" parameterType="SoccerFormation">
+        update soccer_formation
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="teamName != null">team_name = #{teamName},</if>
+            <if test="formation != null">formation = #{formation},</if>
+            <if test="isDel != null">is_del = #{isDel},</if>
+            <if test="playerIdStr != null">player_id_str = #{playerIdStr},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteSoccerFormationById" parameterType="Long">
+        delete from soccer_formation where id = #{id}
+    </delete>
+
+    <delete id="deleteSoccerFormationByIds" parameterType="String">
+        delete from soccer_formation where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+</mapper>

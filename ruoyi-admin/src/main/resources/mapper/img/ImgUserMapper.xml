@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.img.mapper.ImgUserMapper">
+    
+    <resultMap type="ImgUser" id="ImgUserResult">
+        <result property="id"    column="id"    />
+        <result property="username"    column="username"    />
+        <result property="phone"    column="phone"    />
+        <result property="headUrl"    column="head_url"    />
+        <result property="province"    column="province"    />
+        <result property="city"    column="city"    />
+        <result property="uid"    column="uid"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="updateTime"    column="update_time"    />
+        <result property="createBy"    column="create_by"    />
+        <result property="validDate"    column="valid_date"    />
+        <result property="word"    column="word"    />
+    </resultMap>
+
+    <sql id="selectImgUserVo">
+        select id, username, phone, head_url, province, city, uid, create_time, update_time, create_by, valid_date, word from img_user
+    </sql>
+
+    <select id="selectImgUserList" parameterType="ImgUser" resultMap="ImgUserResult">
+        <include refid="selectImgUserVo"/>
+        <where>  
+            <if test="username != null  and username != ''"> and username like concat('%', #{username}, '%')</if>
+            <if test="phone != null  and phone != ''"> and phone = #{phone}</if>
+            <if test="headUrl != null  and headUrl != ''"> and head_url = #{headUrl}</if>
+            <if test="province != null  and province != ''"> and province = #{province}</if>
+            <if test="city != null  and city != ''"> and city = #{city}</if>
+            <if test="uid != null  and uid != ''"> and uid = #{uid}</if>
+            <if test="validDate != null  and validDate != ''"> and valid_date = #{validDate}</if>
+        </where>
+    </select>
+    
+    <select id="selectImgUserById" parameterType="Long" resultMap="ImgUserResult">
+        <include refid="selectImgUserVo"/>
+        where id = #{id}
+    </select>
+        
+    <insert id="insertImgUser" parameterType="ImgUser" useGeneratedKeys="true" keyProperty="id">
+        insert into img_user
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="username != null">username,</if>
+            <if test="phone != null">phone,</if>
+            <if test="headUrl != null">head_url,</if>
+            <if test="province != null">province,</if>
+            <if test="city != null">city,</if>
+            <if test="uid != null">uid,</if>
+            <if test="createTime != null">create_time,</if>
+            <if test="updateTime != null">update_time,</if>
+            <if test="createBy != null">create_by,</if>
+            <if test="validDate != null">valid_date,</if>
+            <if test="word != null">word,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="username != null">#{username},</if>
+            <if test="phone != null">#{phone},</if>
+            <if test="headUrl != null">#{headUrl},</if>
+            <if test="province != null">#{province},</if>
+            <if test="city != null">#{city},</if>
+            <if test="uid != null">#{uid},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="updateTime != null">#{updateTime},</if>
+            <if test="createBy != null">#{createBy},</if>
+            <if test="validDate != null">#{validDate},</if>
+            <if test="word != null">#{word},</if>
+         </trim>
+    </insert>
+
+    <update id="updateImgUser" parameterType="ImgUser">
+        update img_user
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="username != null">username = #{username},</if>
+            <if test="phone != null">phone = #{phone},</if>
+            <if test="headUrl != null">head_url = #{headUrl},</if>
+            <if test="province != null">province = #{province},</if>
+            <if test="city != null">city = #{city},</if>
+            <if test="uid != null">uid = #{uid},</if>
+            <if test="createTime != null">create_time = #{createTime},</if>
+            <if test="updateTime != null">update_time = #{updateTime},</if>
+            <if test="createBy != null">create_by = #{createBy},</if>
+            <if test="validDate != null">valid_date = #{validDate},</if>
+            <if test="word != null">word = #{word},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteImgUserById" parameterType="Long">
+        delete from img_user where id = #{id}
+    </delete>
+
+    <delete id="deleteImgUserByIds" parameterType="String">
+        delete from img_user where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+</mapper>

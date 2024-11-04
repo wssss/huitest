@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.system.mapper.RanSelecterMapper">
+    
+    <resultMap type="RanSelecter" id="RanSelecterResult">
+        <result property="id"    column="id"    />
+        <result property="title"    column="title"    />
+        <result property="btn"    column="btn"    />
+        <result property="sys"    column="sys"    />
+        <result property="content"    column="content"    />
+        <result property="img"    column="img"    />
+        <result property="selector"    column="selector"    />
+        <result property="keyStr"    column="key_str"    />
+        <result property="isRecommend"    column="is_recommend"    />
+        <result property="isDel"    column="is_del"    />
+    </resultMap>
+
+    <sql id="selectRanSelecterVo">
+        select id, title, btn, sys, content, img, selector, key_str, is_recommend, is_del from ran_selecter
+    </sql>
+
+    <select id="selectRanSelecterList" parameterType="RanSelecter" resultMap="RanSelecterResult">
+        <include refid="selectRanSelecterVo"/>
+        <where>  
+            <if test="title != null  and title != ''"> and title like concat('%', #{title}, '%')</if>
+            <if test="btn != null  and btn != ''"> and btn = #{btn}</if>
+            <if test="sys != null  and sys != ''"> and sys = #{sys}</if>
+            <if test="content != null  and content != ''"> and content = #{content}</if>
+            <if test="img != null  and img != ''"> and img = #{img}</if>
+            <if test="selector != null  and selector != ''"> and selector = #{selector}</if>
+            <if test="keyStr != null  and keyStr != ''"> and key_str like concat('%', #{keyStr}, '%')</if>
+            <if test="isRecommend != null  and isRecommend != ''"> and is_recommend = #{isRecommend}</if>
+            <if test="isDel != null  and isDel != ''"> and is_del = #{isDel}</if>
+        </where>
+    </select>
+    
+    <select id="selectRanSelecterById" parameterType="Long" resultMap="RanSelecterResult">
+        <include refid="selectRanSelecterVo"/>
+        where id = #{id}
+    </select>
+        
+    <insert id="insertRanSelecter" parameterType="RanSelecter" useGeneratedKeys="true" keyProperty="id">
+        insert into ran_selecter
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="title != null and title != ''">title,</if>
+            <if test="btn != null and btn != ''">btn,</if>
+            <if test="sys != null and sys != ''">sys,</if>
+            <if test="content != null and content != ''">content,</if>
+            <if test="img != null and img != ''">img,</if>
+            <if test="selector != null and selector != ''">selector,</if>
+            <if test="keyStr != null">key_str,</if>
+            <if test="isRecommend != null">is_recommend,</if>
+            <if test="isDel != null">is_del,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="title != null and title != ''">#{title},</if>
+            <if test="btn != null and btn != ''">#{btn},</if>
+            <if test="sys != null and sys != ''">#{sys},</if>
+            <if test="content != null and content != ''">#{content},</if>
+            <if test="img != null and img != ''">#{img},</if>
+            <if test="selector != null and selector != ''">#{selector},</if>
+            <if test="keyStr != null">#{keyStr},</if>
+            <if test="isRecommend != null">#{isRecommend},</if>
+            <if test="isDel != null">#{isDel},</if>
+         </trim>
+    </insert>
+
+    <update id="updateRanSelecter" parameterType="RanSelecter">
+        update ran_selecter
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="title != null and title != ''">title = #{title},</if>
+            <if test="btn != null and btn != ''">btn = #{btn},</if>
+            <if test="sys != null and sys != ''">sys = #{sys},</if>
+            <if test="content != null and content != ''">content = #{content},</if>
+            <if test="img != null and img != ''">img = #{img},</if>
+            <if test="selector != null and selector != ''">selector = #{selector},</if>
+            <if test="keyStr != null">key_str = #{keyStr},</if>
+            <if test="isRecommend != null">is_recommend = #{isRecommend},</if>
+            <if test="isDel != null">is_del = #{isDel},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteRanSelecterById" parameterType="Long">
+        delete from ran_selecter where id = #{id}
+    </delete>
+
+    <delete id="deleteRanSelecterByIds" parameterType="String">
+        delete from ran_selecter where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+</mapper>

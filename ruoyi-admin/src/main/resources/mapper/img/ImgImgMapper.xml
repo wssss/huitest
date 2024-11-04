@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.img.mapper.ImgImgMapper">
+    
+    <resultMap type="ImgImg" id="ImgImgResult">
+        <result property="id"    column="id"    />
+        <result property="url"    column="url"    />
+        <result property="userId"    column="user_id"    />
+        <result property="cateId"    column="cate_id"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="isDel"    column="is_del"    />
+        <result property="isRec"    column="is_rec"    />
+        <result property="isTop"    column="is_top"    />
+        <result property="times"    column="times"    />
+    </resultMap>
+
+    <sql id="selectImgImgVo">
+        select id, url, user_id, cate_id, is_del, is_rec, is_top,times create_time from img_img
+    </sql>
+
+    <select id="selectImgImgList" parameterType="ImgImg" resultMap="ImgImgResult">
+        <include refid="selectImgImgVo"/>
+        <where>  
+            <if test="userId != null "> and user_id = #{userId}</if>
+            <if test="cateId != null "> and cate_id = #{cateId}</if>
+            <if test="isDel != null "> and is_del = #{isDel}</if>
+            <if test="isRec != null "> and is_rec = #{isRec}</if>
+            <if test="isTop != null "> and is_top = #{isTop}</if>
+        </where>
+        order by create_time desc
+    </select>
+    
+    <select id="selectImgImgById" parameterType="Long" resultMap="ImgImgResult">
+        <include refid="selectImgImgVo"/>
+        where id = #{id}
+    </select>
+        
+    <insert id="insertImgImg" parameterType="ImgImg" useGeneratedKeys="true" keyProperty="id">
+        insert into img_img
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="url != null">url,</if>
+            <if test="userId != null">user_id,</if>
+            <if test="cateId != null">cate_id,</if>
+            <if test="createTime != null">create_time,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="url != null">#{url},</if>
+            <if test="userId != null">#{userId},</if>
+            <if test="cateId != null">#{cateId},</if>
+            <if test="createTime != null">#{createTime},</if>
+         </trim>
+    </insert>
+
+    <update id="updateImgImg" parameterType="ImgImg">
+        update img_img
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="url != null">url = #{url},</if>
+            <if test="userId != null">user_id = #{userId},</if>
+            <if test="cateId != null">cate_id = #{cateId},</if>
+            <if test="createTime != null">create_time = #{createTime},</if>
+            <if test="isDel != null">is_del = #{isDel},</if>
+            <if test="isTop != null">is_top = #{isTop},</if>
+            <if test="isRec != null">is_rec = #{isRec},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteImgImgById" parameterType="Long">
+        delete from img_img where id = #{id}
+    </delete>
+
+    <delete id="deleteImgImgByIds" parameterType="String">
+        delete from img_img where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+</mapper>

@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.system.mapper.TestTestMapper">
+
+    <resultMap type="TestTest" id="TestTestResult">
+        <result property="id"    column="id"    />
+        <result property="title"    column="title"    />
+        <result property="photo"    column="photo"    />
+        <result property="ques"    column="ques"    />
+        <result property="banner"    column="banner"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="updateTime"    column="update_time"    />
+        <result property="updateBy"    column="update_by"    />
+        <result property="isDel"    column="is_del"    />
+        <result property="isRecommend"    column="is_recommend"    />
+        <result property="isProducting"    column="is_producting"    />
+    </resultMap>
+
+    <sql id="selectTestTestVo">
+        select id, title, photo, ques, banner, create_time, update_time, update_by, is_del, is_recommend, is_producting from test_test
+    </sql>
+
+    <select id="selectTestTestList" parameterType="TestTest" resultMap="TestTestResult">
+        <include refid="selectTestTestVo"/>
+        <where>  
+            <if test="title != null  and title != ''"> and title like concat('%', #{title}, '%')</if>
+            <if test="isDel != null "> and is_del = #{isDel}</if>
+            <if test="isRecommend != null "> and is_recommend = #{isRecommend}</if>
+            <if test="isProducting != null "> and is_producting = #{isProducting}</if>
+        </where>
+    </select>
+    
+    <select id="selectTestTestById" parameterType="Long" resultMap="TestTestResult">
+        <include refid="selectTestTestVo"/>
+        where id = #{id}
+    </select>
+        
+    <insert id="insertTestTest" parameterType="TestTest">
+        insert into test_test
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null">id,</if>
+            <if test="title != null">title,</if>
+            <if test="photo != null">photo,</if>
+            <if test="ques != null">ques,</if>
+            <if test="banner != null">banner,</if>
+            <if test="createTime != null">create_time,</if>
+            <if test="updateTime != null">update_time,</if>
+            <if test="updateBy != null">update_by,</if>
+            <if test="isDel != null">is_del,</if>
+            <if test="isRecommend != null">is_recommend,</if>
+            <if test="isProducting != null">is_producting,</if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="id != null">#{id},</if>
+            <if test="title != null">#{title},</if>
+            <if test="photo != null">#{photo},</if>
+            <if test="ques != null">#{ques},</if>
+            <if test="banner != null">#{banner},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="updateTime != null">#{updateTime},</if>
+            <if test="updateBy != null">#{updateBy},</if>
+            <if test="isDel != null">#{isDel},</if>
+            <if test="isRecommend != null">#{isRecommend},</if>
+            <if test="isProducting != null">#{isProducting},</if>
+        </trim>
+
+    </insert>
+
+    <update id="updateTestTest" parameterType="TestTest">
+        update test_test
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="title != null">title = #{title},</if>
+            <if test="photo != null">photo = #{photo},</if>
+            <if test="ques != null">ques = #{ques},</if>
+            <if test="banner != null">banner = #{banner},</if>
+            <if test="createTime != null">create_time = #{createTime},</if>
+            <if test="updateTime != null">update_time = #{updateTime},</if>
+            <if test="updateBy != null">update_by = #{updateBy},</if>
+            <if test="isDel != null">is_del = #{isDel},</if>
+            <if test="isRecommend != null">is_recommend = #{isRecommend},</if>
+            <if test="isProducting != null">is_producting = #{isProducting},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteTestTestById" parameterType="Long">
+        delete from test_test where id = #{id}
+    </delete>
+
+    <delete id="deleteTestTestByIds" parameterType="String">
+        delete from test_test where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+</mapper>
